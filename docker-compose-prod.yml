@@ -1,0 +1,48 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:14-bullseye
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    expose:
+      - 5432
+    env_file:
+      - ./compose/development/postgres/.env
+
+  redis:
+    image: redis:7.0
+    restart: always
+    volumes:
+      - redis_data:/data:rw
+
+  app:
+    build:
+      context: .
+      dockerfile: compose/production/django/DockerFile
+    command: /start
+    volumes:
+      - static_volume:/app/public/static
+    expose:
+      - 8000
+    env_file:
+      - ./compose/development/postgres/.env
+      - ./compose/development/django/.env
+      - ./compose/development/redis/.env
+    depends_on:
+      - postgres
+      - redis
+
+  nginx:
+    build: ./compose/production/nginx
+    ports:
+      - "80:80"
+    volumes:
+      - static_volume:/app/public/static
+    depends_on:
+      - app
+
+volumes:
+  postgres_data:
+  redis_data:
+  static_volume:

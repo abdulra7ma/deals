@@ -1,0 +1,35 @@
+version: '3.7'
+services:
+  postgres:
+    env_file:
+      - ./compose/development/postgres/.env
+    image: postgres:14.0
+    restart: always
+    volumes:
+      - pg_data:/var/lib/postgresql/data:rw
+
+  app:
+    build:
+      context: .
+      dockerfile: compose/development/django/DockerFile
+    command: sh -c  "python api/manage.py migrate && python api/manage.py runserver_plus 0.0.0.0:8000"
+    volumes:
+      - .:/var/www/deals/api/:z
+    ports:
+      - "8000:8000"
+    env_file:
+      - ./compose/development/postgres/.env
+      - ./compose/development/django/.env
+      - ./compose/development/redis/.env
+    depends_on:
+      -  postgres
+      -  redis
+
+  redis:
+    image: redis:7.0
+    restart: always
+    volumes:
+      - redis_data:/data:rw
+volumes:
+  pg_data: {}
+  redis_data: {}
