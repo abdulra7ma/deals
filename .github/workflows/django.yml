@@ -39,4 +39,5 @@ jobs:
       env:
         CORE_SECRET_KEY: static
       run: |
+        python3 api/manage.py migrate --noinput
         fab test
