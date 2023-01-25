@@ -26,7 +26,6 @@
 
 ### First run: (Local) ###
 
-
 Install Python 3.10 & setup virtual environment. We recommend to use [pyenv](https://github.com/pyenv/pyenv) & [pyenv-virtualenv](https://github.com/pyenv/pyenv-virtualenv):
 
 ```bash

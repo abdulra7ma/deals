@@ -7,13 +7,23 @@ on:
     branches: [ "main" ]
 
 jobs:
-  build:
-
+  test:
     runs-on: ubuntu-latest
     strategy:
       max-parallel: 4
       matrix:
         python-version: ["3.10"]
+    services:
+      postgres:
+        image: postgres:14.0
+        env:
+          POSTGRES_HOST: postgres
+          POSTGRES_PORT: 5432
+          POSTGRES_DB: deals_db
+          POSTGRES_USER: bUIbSanLeBMEZMZoaLtPWBfmgurkkbKe
+          POSTGRES_PASSWORD: 4Foyx66gRcj9TGAEuCrYtp13pqE5ObhPoBQgsrnsaIWfh5okBLAUuP219Rd0ti5O
+        ports: [ '5432:5432' ]
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
 
     steps:
     - uses: actions/checkout@v3
