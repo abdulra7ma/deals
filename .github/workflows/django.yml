@@ -36,11 +36,11 @@ jobs:
     - name: Run migrations
       env:
         CORE_SECRET_KEY: static
-        CORE_DATABASE_URL: psql://$postgres:@localhost:5432/deals_db
+        CORE_DATABASE_URL: psql://$postgres:postgres-superpassword@localhost:5432/deals_db
       run: python api/manage.py migrate --noinput
     - name: Run Tests
       env:
         CORE_SECRET_KEY: static
-        CORE_DATABASE_URL: psql://$postgres:@localhost:5432/deals_db
+        CORE_DATABASE_URL: psql://$postgres:postgres-superpassword@localhost:5432/deals_db
       run: |
         fab test
