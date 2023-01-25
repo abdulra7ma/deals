@@ -8,7 +8,9 @@ on:
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on:
+      - python
+      - django
     strategy:
       max-parallel: 4
       matrix:
