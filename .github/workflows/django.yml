@@ -17,11 +17,9 @@ jobs:
       postgres:
         image: postgres:14.0
         env:
-          POSTGRES_HOST: postgres
-          POSTGRES_PORT: 5432
           POSTGRES_DB: deals_db
-          POSTGRES_USER: bUIbSanLeBMEZMZoaLtPWBfmgurkkbKe
-          POSTGRES_PASSWORD: 4Foyx66gRcj9TGAEuCrYtp13pqE5ObhPoBQgsrnsaIWfh5okBLAUuP219Rd0ti5O
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres-superpassword
         ports: [ '5432:5432' ]
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
 
@@ -35,9 +33,14 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install -r api/requirements-dev.txt
+    - name: Run migrations
+      env:
+        CORE_SECRET_KEY: static
+        CORE_DATABASE_URL: psql://$postgres:@localhost:5432/deals_db
+      run: python api/manage.py migrate --noinput
     - name: Run Tests
       env:
         CORE_SECRET_KEY: static
+        CORE_DATABASE_URL: psql://$postgres:@localhost:5432/deals_db
       run: |
-        python3 api/manage.py migrate --noinput
         fab test
